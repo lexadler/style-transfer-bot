@@ -1,5 +1,5 @@
-from bot import TelegramGANBot
+from bot import TelegramBot
 
 if __name__ == '__main__':
-    bot = TelegramGANBot(from_config=True)
+    bot = TelegramBot(from_config=True)
     bot.run()
