@@ -1,7 +1,7 @@
 __pycache__/
 .pytest_cache/
 .vscode/
+config.yml
 env/
 pytest.ini
-secrets.py
 tmp/
