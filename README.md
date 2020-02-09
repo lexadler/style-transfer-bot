@@ -1,1 +1,1 @@
-# Bot with big GAN
+# Telegram bot with style transfer
