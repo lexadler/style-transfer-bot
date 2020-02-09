@@ -47,8 +47,8 @@ class TelegramBot:
             first_image_file[chat_id].download(out=content_image_stream)
             del first_image_file[chat_id]
             image_file.download(out=style_image_stream)
-            output_stream = self.model.transfer_style(content_image_stream, style_image_stream)
-        #    output.save(output_stream, format='PNG') 
+            output = self.model.transfer_style(content_image_stream, style_image_stream)
+            output.save(output_stream, format='PNG') 
             output_stream.seek(0)
             context.bot.send_photo(chat_id, photo=output_stream)
             print('Sent Photo to user')

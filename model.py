@@ -6,7 +6,6 @@ import torch.optim as optim
 import torchvision.transforms as transforms
 import torchvision.models as models
 import copy
-from scipy import misc
 
 class Normalization(nn.Module):
         def __init__(self, mean, std):
@@ -48,9 +47,9 @@ class ContentLoss(nn.Module):
 class StyleTransferModel:
     
     def __init__(self):
-        self.device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+        self.device = torch.device("cpu") #"cuda" if torch.cuda.is_available() else "cpu")
         self.imsize = 128
-        self.cnn = models.vgg19(pretrained=True).features.to(device).eval()
+        self.cnn = models.vgg19(pretrained=True).features.to(self.device).eval()
     
     def image_loader(self, img_stream):
         loader = transforms.Compose([
@@ -66,6 +65,9 @@ class StyleTransferModel:
                                                             style_weight=100000,
                                                             content_weight=1):
         print(f'Device is {self.device}.\nBuilding the style transfer model...')
+        return transforms.ToPILImage()(self.image_loader(content_img_stream).squeeze(0))
+
+        '''        
         style_img = self.image_loader(style_img_stream)
         content_img = self.image_loader(content_img_stream)
         input_img = content_img.clone()
@@ -101,7 +103,7 @@ class StyleTransferModel:
 
         input_img.data.clamp_(0, 1)
         return input_img            
-    #    return misc.toimage(self.image_loader(content_img_stream)[0])
+    '''
     
     def get_style_model_and_losses(self, style_img, content_img,
                                    content_layers=['conv_4'],
