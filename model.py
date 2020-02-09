@@ -46,11 +46,21 @@ class ContentLoss(nn.Module):
 
 class StyleTransferModel:
     
-    def __init__(self):
-        self.device = torch.device("cpu") # torch.device("cuda" if torch.cuda.is_available() else "cpu")
-        self.imsize = 128
+    def __init__(self, logger, device=None, imsize=None):
+        self.device = self.set_device(device)
+        self.imsize = imsize or 128
         self.cnn = models.vgg19(pretrained=True).features.to(self.device).eval()
+        self.logger = logger
     
+    def set_device(self, device):
+        return torch.device(device) if device else \
+                                    torch.device("cuda" if torch.cuda.is_available() else "cpu")
+    
+    def log(self, message, bot=None, chat_id=None):
+        self.logger.info(message)
+        if all([bot, chat_id]):
+            bot.send_message(chat_id=chat_id, text=message)            
+
     def image_loader(self, img_stream):
         loader = transforms.Compose([
             transforms.Resize(self.imsize),
@@ -63,14 +73,16 @@ class StyleTransferModel:
     def transfer_style(self, content_img_stream, style_img_stream,
                                                             num_steps=500,
                                                             style_weight=100000,
-                                                            content_weight=1):
-        print(f'Device is {self.device}.\nBuilding the style transfer model...')
+                                                            content_weight=1,
+                                                            bot=None, chat_id=None):
+        self.log(f'Device is {self.device}.', bot=bot, chat_id=chat_id)
+        self.log('Building the style transfer model...', bot=bot, chat_id=chat_id)
         style_img = self.image_loader(style_img_stream)
         content_img = self.image_loader(content_img_stream)
         input_img = content_img.clone()
         model, style_losses, content_losses = self.get_style_model_and_losses(style_img, content_img)
         optimizer = self.get_input_optimizer(input_img)
-        print('Optimizing...')
+        self.log('Optimizing...', bot=bot, chat_id=chat_id)
         run = [0]
         while run[0] <= num_steps:
         
@@ -90,9 +102,9 @@ class StyleTransferModel:
                 loss.backward()
                 run[0] += 1
                 if run[0] % 50 == 0:
-                    print("run {}:".format(run))
-                    print('Style Loss : {:4f} Content Loss: {:4f}'.format(
-                        style_score.item(), content_score.item()))
+                    self.log("run {}:".format(run), bot=bot, chat_id=chat_id)
+                    self.log('Style Loss : {:4f} Content Loss: {:4f}'.format(
+                        style_score.item(), content_score.item()),  bot=bot, chat_id=chat_id)
                     print()
                 return style_score + content_score
             

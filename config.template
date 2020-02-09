@@ -1,0 +1,11 @@
+# Add necessary settings and rename this file to config.yml to configure app.
+
+# Telegram bot token
+token: '<YOUR_BOT_TOKEN>'
+proxy_url: 'socks4://<ADRESS>:<PORT>'
+# Can be set to INFO, WARNING, DEBUG or will be set to INFO if ignored
+log_level: <LOG_LEVEL>
+# Can be set to 'cpu' or 'cuda' or ignore this setting for automatic configuration
+device: '<DEVICE>'
+# Result image size will be <SIZE>x<SIZE>. Can be set to int like 128, 240, etc. Will be set to 128 if ignored
+image_size: <SIZE>
