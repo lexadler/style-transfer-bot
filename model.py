@@ -8,6 +8,7 @@ import torchvision.models as models
 import copy
 
 class Normalization(nn.Module):
+    
         def __init__(self, mean, std):
             super(Normalization, self).__init__()
             self.mean = torch.tensor(mean).view(-1, 1, 1)
@@ -17,6 +18,7 @@ class Normalization(nn.Module):
             return (img - self.mean) / self.std
 
 class StyleLoss(nn.Module):
+
         def __init__(self, target_feature):
             super(StyleLoss, self).__init__()
             self.target = self.gram_matrix(target_feature).detach()

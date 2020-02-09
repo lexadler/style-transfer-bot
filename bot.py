@@ -14,7 +14,7 @@ class TelegramBot:
     def __init__(self, token: str=None, proxy_url: str=None, from_config: bool=False):
         if from_config:
             config = self._get_config()
-        elif all(token, proxy_url):
+        elif all([token, proxy_url]):
             config = {'token': token, 'proxy_url': proxy_url}
         self.logger = self._get_logger(config)
         self.updater = self.connect(config)
