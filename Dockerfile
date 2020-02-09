@@ -1,5 +1,5 @@
 FROM python:3.8-buster
-ENV PYTHONPATH "${PYTHONPATH}:."
+ENV PYTHONPATH "${PYTHONPATH}:/app"
 WORKDIR /app
 COPY requirements.txt /app/
 RUN pip install --upgrade pip setuptools wheel 
