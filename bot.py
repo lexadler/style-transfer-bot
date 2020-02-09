@@ -44,9 +44,9 @@ class TelegramBot:
 
         if chat_id in first_image_file:
             content_image_stream, style_image_stream, output_stream = BytesIO(), BytesIO(), BytesIO()
-            first_image_file[chat_id].download(out=content_image_stream)
+            first_image_file[chat_id].download(out=style_image_stream)
             del first_image_file[chat_id]
-            image_file.download(out=style_image_stream)
+            image_file.download(out=content_image_stream)
             output = self.model.transfer_style(content_image_stream, style_image_stream)
             output.save(output_stream, format='PNG') 
             output_stream.seek(0)
